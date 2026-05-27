@@ -1,0 +1,22 @@
+package com.example.socket.springbootwebsocket.config;
+
+import com.example.socket.springbootwebsocket.websocket.MatchRedisSubscriber;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+
+@Configuration
+public class RedisConfig {
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(
+            RedisConnectionFactory connectionFactory,
+            MatchRedisSubscriber subscriber) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.addMessageListener(subscriber, new PatternTopic("match:*"));
+        return container;
+    }
+}
